@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int                @id @default(autoincrement())
+  username         String
+  password         String
+  salt             String
+  name             String?
+  phone            String?
+  email            String?            @unique
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  role             Role
+  Post             Post[]
+  Category         PostsCategory[]
+  Product          Product[]
+  ProductsCategory ProductsCategory[]
+
+  @@map("user")
+}
+
+model Post {
+  id             Int     @id @default(autoincrement())
+  title          String
+  slug           String
+  excerpt        String
+  content        String?
+  image          Json?
+  public         Boolean @default(false)
+  status         Boolean @default(false)
+  order          Int?
+  seoTitle       String? @map("seo_title")
+  seoDescription String? @map("seo_description")
+  seoKeywords    String? @map("seo_keywords")
+
+  userCreated Int  @map("user_created")
+  user        User @relation(fields: [userCreated], references: [id])
+
+  postType String  @default("post") @map("post_type")
+  trash    Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  categories PostsCategories[]
+
+  @@map("post")
+}
+
+model PostsCategory {
+  id             Int     @id @default(autoincrement())
+  name           String
+  slug           String?
+  excerpt        String?
+  content        String?
+  image          Json?
+  seoTitle       String? @map("seo_title")
+  seoDescription String? @map("seo_description")
+  seoKeywords    String? @map("seo_keywords")
+  order          Int?    @default(0)
+  public         Boolean @default(true)
+
+  userCreated Int  @map("user_created")
+  user        User @relation(fields: [userCreated], references: [id])
+
+  parentId Int?            @default(0) @map("parent_id")
+  parent   PostsCategory?  @relation(name: "CategoryHierarchy", fields: [parentId], references: [id])
+  children PostsCategory[] @relation(name: "CategoryHierarchy")
+
+  level    Int?
+  cateType String  @default("post_category") @map("cate_type")
+  trash    Boolean @default(false)
+  tags     String?
+
+  posts PostsCategories[]
+
+  @@map("posts_category")
+}
+
+model PostsCategories {
+  postId          Int           @map("post_id")
+  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postsCategoryId Int           @map("post_category_id")
+  postsCategory   PostsCategory @relation(fields: [postsCategoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, postsCategoryId])
+  @@map("posts_categories")
+}
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  code           Int?
+  name           String
+  slug           String
+  excerpt        String?
+  content        String?
+  image          Json
+  seoTitle       String?  @map("seo_title")
+  seoDescription String?  @map("seo_description")
+  seoKeywords    String?  @map("seo_keywords")
+  public         Boolean  @default(true)
+  price          Float
+  priceSale      Float    @map("price_sale")
+  supplierId     Int?     @map("supplier_id")
+  brandId        Int?     @map("brand_id")
+  order          Int?
+  userCreated    Int      @map("user_created")
+  user           User     @relation(fields: [userCreated], references: [id])
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  type           String   @default("product")
+  trash          Boolean  @default(false)
+
+  categories ProductsCategories[]
+
+  @@map("product")
+}
+
+model ProductsCategory {
+  id             Int     @id @default(autoincrement())
+  name           String
+  slug           String
+  excerpt        String?
+  content        String?
+  image          String?
+  seoTitle       String? @map("seo_title")
+  seoDescription String? @map("seo_description")
+  seoKeywords    String? @map("seo_keywords")
+  order          Int     @default(0)
+  public         Boolean @default(true)
+
+  userCreated Int  @map("user_created")
+  user        User @relation(fields: [userCreated], references: [id])
+
+  parentId Int                @map("parent_id")
+  parent   ProductsCategory   @relation(name: "CategoryHierarchy", fields: [parentId], references: [id])
+  children ProductsCategory[] @relation(name: "CategoryHierarchy")
+
+  level    Int
+  cateType String  @default("post_category") @map("cate_type")
+  trash    Boolean @default(false)
+  tags     String?
+
+  // productsCategoryId Int?                 @map("product_category_id")
+  products ProductsCategories[]
+
+  @@map("products_category")
+}
+
+model ProductsCategories {
+  productId          Int              @map("product_id")
+  product            Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productsCategoryId Int              @map("product_category_id")
+  category           ProductsCategory @relation(fields: [productsCategoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, productsCategoryId])
+  @@map("products_categories")
+}
+
+enum Role {
+  ROOT
+  ADMINISTRATOR
+  CUSTOMER
+}
