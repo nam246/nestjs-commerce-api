@@ -12,28 +12,29 @@ async function main() {
   const hashPwd = await bcrypt.hash('admin', salt);
 
   //  create user
-  // const admin = await prisma.user.create({
-  //   data: {
-  //     username: 'admin',
-  //     password: hashPwd,
-  //     salt: salt,
-  //     name: 'quan tri vien',
-  //     phone: '01238699027',
-  //     email: 'admin@admin.com',
-  //     role: Role.ROOT,
-  //   },
-  // });
+  const admin = await prisma.user.create({
+    data: {
+      username: 'admin',
+      password: hashPwd,
+      salt: salt,
+      name: 'quan tri vien',
+      phone: '01238699027',
+      email: 'admin@admin.com',
+      role: Role.ROOT,
+    },
+  });
 
   // create post
   const post1 = await prisma.post.create({
     data: {
       title: "What's new in Prisma? (Q1/22)",
       slug: 'what-new-in-prisma',
-      excerpt: 'Our engineers have been working hard, issuing new releases with many improvements...',
+      excerpt:
+        'Our engineers have been working hard, issuing new releases with many improvements...',
       content:
         'Learn about everything in the Prisma ecosystem and community from January to March 2022.',
       public: true,
-      userCreated: 1
+      userCreated: admin.id,
     },
   });
 
@@ -43,22 +44,22 @@ async function main() {
       name: 'default category',
       slug: 'default-category',
       public: true,
-      userCreated: 1,
-      parentId: 0 || null
-    }
-  })
+      userCreated: admin.id,
+      parentId: 0 || null,
+    },
+  });
 
   const cate2 = await prisma.postsCategory.create({
     data: {
       name: 'humour',
       slug: 'humour',
       public: true,
-      userCreated: 1,
-      parentId: 0 || null
-    }
-  })
+      userCreated: admin.id,
+      parentId: 0 || null,
+    },
+  });
 
-  console.log("DB is seeded!");
+  console.log('DB is seeded!');
 }
 
 // execute the main function
