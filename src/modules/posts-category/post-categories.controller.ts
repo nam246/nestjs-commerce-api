@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Query, Body, Param, UseGuards } from '@nestjs/common';
-import { PostsCategoryService } from './posts-category.service';
-import { CreatePostsCategoryDto } from './dto/create-posts-category.dto';
+import { PostsCategoryService } from './post-categories.service';
+import { CreatePostsCategoryDto } from './dto/create-post-category.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';

@@ -7,22 +7,22 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-        
+
 model User {
-  id               Int                @id @default(autoincrement())
-  username         String
-  password         String
-  salt             String
-  name             String?
-  phone            String?
-  email            String?            @unique
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
-  role             Role
-  Post             Post[]
-  Category         PostsCategory[]
-  Product          Product[]
-  ProductsCategory ProductsCategory[]
+  id                Int               @id @default(autoincrement())
+  username          String
+  password          String
+  salt              String
+  name              String?
+  phone             String?
+  email             String?           @unique
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  role              Role
+  Posts             Post[]
+  PostCategories    PostCategory[]
+  Products          Product[]
+  ProductCategories ProductCategory[]
 
   @@map("user")
 }
@@ -55,7 +55,7 @@ model Post {
   @@map("post")
 }
 
-model PostsCategory {
+model PostCategory {
   id             Int     @id @default(autoincrement())
   name           String
   slug           String?
@@ -71,27 +71,27 @@ model PostsCategory {
   userCreated Int  @map("user_created")
   user        User @relation(fields: [userCreated], references: [id])
 
-  parentId Int?            @default(0) @map("parent_id")
-  parent   PostsCategory?  @relation(name: "CategoryHierarchy", fields: [parentId], references: [id])
-  children PostsCategory[] @relation(name: "CategoryHierarchy")
+  parentId Int?           @default(0) @map("parent_id")
+  parent   PostCategory?  @relation(name: "CategoryHierarchy", fields: [parentId], references: [id])
+  children PostCategory[] @relation(name: "CategoryHierarchy")
 
   level    Int?
-  cateType CateType  @default(post_category) @map("cate_type")
-  trash    Boolean @default(false)
+  cateType CateType @default(post_category) @map("cate_type")
+  trash    Boolean  @default(false)
   tags     String?
 
   posts PostsCategories[]
 
-  @@map("posts_category")
+  @@map("post_category")
 }
 
 model PostsCategories {
-  postId          Int           @map("post_id")
-  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postsCategoryId Int           @map("post_category_id")
-  postsCategory   PostsCategory @relation(fields: [postsCategoryId], references: [id], onDelete: Cascade)
+  postId         Int          @map("post_id")
+  post           Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postCategoryId Int          @map("post_category_id")
+  postCategory   PostCategory @relation(fields: [postCategoryId], references: [id], onDelete: Cascade)
 
-  @@id([postId, postsCategoryId])
+  @@id([postId, postCategoryId])
   @@map("posts_categories")
 }
 
@@ -124,7 +124,7 @@ model Product {
   @@map("product")
 }
 
-model ProductsCategory {
+model ProductCategory {
   id             Int     @id @default(autoincrement())
   name           String
   slug           String
@@ -140,28 +140,28 @@ model ProductsCategory {
   userCreated Int  @map("user_created")
   user        User @relation(fields: [userCreated], references: [id])
 
-  parentId Int                @map("parent_id")
-  parent   ProductsCategory   @relation(name: "CategoryHierarchy", fields: [parentId], references: [id])
-  children ProductsCategory[] @relation(name: "CategoryHierarchy")
+  parentId Int               @map("parent_id")
+  parent   ProductCategory   @relation(name: "CategoryHierarchy", fields: [parentId], references: [id])
+  children ProductCategory[] @relation(name: "CategoryHierarchy")
 
   level    Int
-  cateType CateType  @default(product_category) @map("cate_type")
-  trash    Boolean @default(false)
+  cateType CateType @default(product_category) @map("cate_type")
+  trash    Boolean  @default(false)
   tags     String?
 
   // productsCategoryId Int?                 @map("product_category_id")
   products ProductsCategories[]
 
-  @@map("products_category")
+  @@map("product_category")
 }
 
 model ProductsCategories {
-  productId          Int              @map("product_id")
-  product            Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productsCategoryId Int              @map("product_category_id")
-  category           ProductsCategory @relation(fields: [productsCategoryId], references: [id], onDelete: Cascade)
+  productId         Int             @map("product_id")
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productCategoryId Int             @map("product_category_id")
+  category          ProductCategory @relation(fields: [productCategoryId], references: [id], onDelete: Cascade)
 
-  @@id([productId, productsCategoryId])
+  @@id([productId, productCategoryId])
   @@map("products_categories")
 }
 
