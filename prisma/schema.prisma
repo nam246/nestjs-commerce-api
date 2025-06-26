@@ -76,7 +76,7 @@ model PostsCategory {
   children PostsCategory[] @relation(name: "CategoryHierarchy")
 
   level    Int?
-  cateType String  @default("post_category") @map("cate_type")
+  cateType CateType  @default(post_category) @map("cate_type")
   trash    Boolean @default(false)
   tags     String?
 
@@ -145,7 +145,7 @@ model ProductsCategory {
   children ProductsCategory[] @relation(name: "CategoryHierarchy")
 
   level    Int
-  cateType String  @default("post_category") @map("cate_type")
+  cateType CateType  @default(product_category) @map("cate_type")
   trash    Boolean @default(false)
   tags     String?
 
@@ -169,4 +169,10 @@ enum Role {
   ROOT
   ADMINISTRATOR
   CUSTOMER
+}
+
+enum CateType {
+  post_category
+  product_category
+  other
 }

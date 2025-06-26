@@ -9,7 +9,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('products')
 export class ProductsController {
-    constructor(private productsService: ProductsService) { }
+  constructor(private productsService: ProductsService) {}
 
     @Post()
     @UseGuards(JwtAuthGuard)
