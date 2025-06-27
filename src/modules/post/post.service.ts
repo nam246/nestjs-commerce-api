@@ -8,7 +8,7 @@ import generateSlug from 'src/shared/generate-slug';
 
 @Injectable()
 export class PostService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(currentUser: any, dto: CreatePostDto) {
     return this.prisma.post.create({
@@ -19,11 +19,12 @@ export class PostService {
         content: dto.content,
         userCreated: currentUser.sub,
         categories: {
-          create: dto.categoriesIds?.map(categoryId => ({
-            postsCategory: { connect: { id: categoryId } }
-          })) || []
-        }
-      }
+          create:
+            dto.categoriesIds?.map((categoryId) => ({
+              postsCategory: { connect: { id: categoryId } },
+            })) || [],
+        },
+      },
     });
   }
 
@@ -38,7 +39,7 @@ export class PostService {
         take: limit,
         where,
         cursor: cursor ? { id: cursor } : undefined,
-        orderBy: { id: 'asc' }
+        orderBy: { id: 'asc' },
       }),
 
       this.prisma.post.count({ where }),
@@ -49,9 +50,9 @@ export class PostService {
       meta: {
         total,
         page,
-        lastPage: Math.ceil(total / limit)
-      }
-    }
+        lastPage: Math.ceil(total / limit),
+      },
+    };
   }
 
   async getPublished() {
@@ -82,14 +83,12 @@ export class PostService {
         image: dto.image,
         seoTitle: dto.seoTitle,
         seoDescription: dto.seoDescription,
-        seoKeywords: dto.seoKeywords
+        seoKeywords: dto.seoKeywords,
       },
     });
   }
 
-  async updateCategories(dto: UpdatePostsCategoriesDto) {
-
-  }
+  async updateCategories(dto: UpdatePostsCategoriesDto) {}
 
   async remove(id: number) {
     return await this.prisma.post.delete({ where: { id } });

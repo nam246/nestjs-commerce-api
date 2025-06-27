@@ -2,8 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Patch,
-  Delete,
   UseInterceptors,
   Body,
   BadRequestException,
@@ -46,11 +44,11 @@ export class ProductsController {
     }),
   )
   async create(
-    @CurrentUser() CurrentUser,
+    @CurrentUser() currentUser,
     @UploadedFiles() files: Express.Multer.File[],
     @Body() dto: CreateProductDto,
   ) {
-    return this.productsService.create(CurrentUser, files, dto);
+    return this.productsService.create(currentUser, files, dto);
   }
 
   @Get()

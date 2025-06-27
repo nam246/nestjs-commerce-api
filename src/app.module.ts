@@ -5,7 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { LikeModule } from './modules/like/like.module';
 import { ProductsModule } from './modules/products/products.module';
-import { PostsCategoryModule } from './modules/posts-category/post-categories.module';
+import { PostsCategoryModule } from './modules/post-categories/post-categories.module';
 import { UploadController } from './modules/upload/upload.controller';
 
 @Module({

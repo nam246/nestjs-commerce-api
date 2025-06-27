@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseIntPipe, UsePipes, Query, UseGuards, Req, UploadedFiles } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  Query,
+  UseGuards,
+  UploadedFiles,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -10,7 +22,7 @@ import { UpdatePostsCategoriesDto } from './dto/update-posts-categories.dto';
 
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postService: PostService) { }
+  constructor(private readonly postService: PostService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -31,10 +43,12 @@ export class PostController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('file', {
-
-  }))
-  async update(@Param('id') id: number, @UploadedFiles() files: Express.Multer.File[], @Body() dto: UpdatePostDto) {
+  @UseInterceptors(FileInterceptor('file', {}))
+  async update(
+    @Param('id') id: number,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() dto: UpdatePostDto,
+  ) {
     return this.postService.update(+id, dto);
   }
 
